@@ -21,7 +21,7 @@ class AddUserCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'app:add-user {--dry-run=1} {email} {password} {username?}';
+    protected $signature = 'dzangolab-auth:add-user {--dry-run=1} {email} {password} {username?}';
 
     /**
      * User repository to persist user in database.
