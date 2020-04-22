@@ -182,6 +182,10 @@ class AuthUserService
     {
         $user = $this->getUserRepository()->updateUser($user, $data);
 
+        if (array_key_exists('profile', $data)) {
+            $this->getUserRepository()->updateProfile($user, $data['profile']);
+        }
+
         if (null === $user) {
             return null;
         }

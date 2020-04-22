@@ -87,9 +87,9 @@ class AuthUserController extends Controller
             $data['username'] = $request->get('username');
         }
 
-        $data['given_name'] = $request->get('given_name');
-        $data['gender'] = $request->get('gender');
-        $data['surname'] = $request->get('surname');
+        $data['profile']['given_name'] = $request->get('given_name');
+        $data['profile']['gender'] = $request->get('gender');
+        $data['profile']['surname'] = $request->get('surname');
 
         return $this->getAuthUserService()->update($user, $data);
     }
