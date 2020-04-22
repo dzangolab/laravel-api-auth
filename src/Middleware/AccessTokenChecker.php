@@ -11,7 +11,8 @@ class AccessTokenChecker
 {
     protected $authenticateMiddleware;
 
-    public function __construct(Authenticate $authenticateMiddleware) {
+    public function __construct(Authenticate $authenticateMiddleware)
+    {
         $this->authenticateMiddleware = $authenticateMiddleware;
     }
 

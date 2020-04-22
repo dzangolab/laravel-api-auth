@@ -81,15 +81,7 @@ class AuthUserController extends Controller
     {
         $user = Auth::user();
 
-        $data = [];
-
-        if ($request->get('username')) {
-            $data['username'] = $request->get('username');
-        }
-
-        $data['profile']['given_name'] = $request->get('given_name');
-        $data['profile']['gender'] = $request->get('gender');
-        $data['profile']['surname'] = $request->get('surname');
+        $data = $request->toArray();
 
         return $this->getAuthUserService()->update($user, $data);
     }

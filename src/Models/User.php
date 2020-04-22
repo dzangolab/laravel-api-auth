@@ -25,11 +25,11 @@ use Laravel\Passport\HasApiTokens;
  * @property mixed profile
  * @property false|string|null password
  */
-class User extends Model implements
-    AuthenticatableContract,
-    CanResetPasswordContract
+class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
-    use Authenticatable, CanResetPassword, MustVerifyEmail;
+    use Authenticatable;
+    use CanResetPassword;
+    use MustVerifyEmail;
     use HasApiTokens;
     use Notifiable;
 
