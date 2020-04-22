@@ -81,11 +81,17 @@ class AuthUserController extends Controller
     {
         $user = Auth::user();
 
-        $args = [
-            'username' => $request->get('username'),
-        ];
+        $data = [];
 
-        return $this->getAuthUserService()->update($user, $args);
+        if ($request->get('username')) {
+            $data['username'] = $request->get('username');
+        }
+
+        $data['given_name'] = $request->get('given_name');
+        $data['gender'] = $request->get('gender');
+        $data['surname'] = $request->get('surname');
+
+        return $this->getAuthUserService()->update($user, $data);
     }
 
     public function updatePassword(Request $request)

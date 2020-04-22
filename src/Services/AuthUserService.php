@@ -180,8 +180,6 @@ class AuthUserService
 
     public function update($user, array $data)
     {
-        $this->checksCurrentUser($user);
-
         $user = $this->getUserRepository()->updateUser($user, $data);
 
         if (null === $user) {
