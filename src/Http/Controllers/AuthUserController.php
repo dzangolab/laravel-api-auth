@@ -73,7 +73,7 @@ class AuthUserController extends Controller
             but AuthToken is specific one token collection */
         return [
             'auth_tokens' => $authToken,
-            'user' => Auth::user(),
+            'user' => $this->getAuthUserService()->getUserWithProfile(Auth::user()),
         ];
     }
 
