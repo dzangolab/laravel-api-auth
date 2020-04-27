@@ -46,18 +46,18 @@ class AuthServiceProvider extends ServiceProvider
             }
         );
 
-        $access_token_lifetime = config('auth.access_token_lifetime.default');
+        $access_token_lifetime = config('dzangolabAuth.access_token_lifetime.default');
 
-        $refresh_token_lifetime = config('auth.refresh_token_lifetime.default');
+        $refresh_token_lifetime = config('dzangolabAuth.refresh_token_lifetime.default');
 
         $app_routes_regex = '/(\/login|\/login\/refresh|\/signup)$/';
 
         $request_url = Request::url();
 
         if (preg_match($app_routes_regex, $request_url)) {
-            $access_token_lifetime = config('auth.access_token_lifetime.app');
+            $access_token_lifetime = config('dzangolabAuth.access_token_lifetime.app');
 
-            $refresh_token_lifetime = config('auth.refresh_token_lifetime.app');
+            $refresh_token_lifetime = config('dzangolabAuth.refresh_token_lifetime.app');
         }
 
         Passport::tokensExpireIn(
