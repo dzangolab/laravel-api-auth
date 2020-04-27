@@ -18,7 +18,7 @@ class UserWasCreatedListener
      */
     public function handle(UserWasCreated $event)
     {
-        $featureUserConfirmation = (bool) config('app.features.user_confirmation');
+        $featureUserConfirmation = (bool) config('auth.user_confirmation');
 
         if (!$featureUserConfirmation) {
             return;

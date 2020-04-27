@@ -78,7 +78,7 @@ class AuthServiceProvider extends ServiceProvider
             ], 'auth-factories');
 
             $this->publishes([
-                __DIR__.'/../config/dzangolabAuth.php' => config_path('dzangolabAuth.php'),
+                __DIR__.'/../config/auth.php' => config_path('auth.php'),
             ], 'auth-config');
 
             $this->commands([

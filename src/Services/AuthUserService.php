@@ -46,7 +46,7 @@ class AuthUserService
 
     public function createUser(array $data)
     {
-        $featureUserConfirmation = (bool) config('app.features.user_confirmation');
+        $featureUserConfirmation = (bool) config('auth.user_confirmation');
         $useUsernameSameAsEmail = (bool) config('auth.username_same_as_email');
 
         $_data = [
