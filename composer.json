@@ -42,7 +42,9 @@
         },
         "laravel": {
             "providers": [
-                "Dzangolab\\Auth\\AuthServiceProvider"
+                "Optimus\\ApiConsumer\\Provider\\LaravelServiceProvider",
+                "Dzangolab\\Auth\\AuthServiceProvider",
+                "Dzangolab\\Auth\\Providers\\AuthRouteServiceProvider"
             ]
         }
     },
