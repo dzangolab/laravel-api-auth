@@ -11,11 +11,7 @@ Laravel auth package to be used for API.
         "repositories": [
             {
                 "type": "git",
-                "url": "https://github.com/dzangolab/laravel-api-consumer.git"
-            },
-            {
-                "type": "git",
-                "url": "https://github.com/dzangolab/laravel-api-consumer.git"
+                "url": "https://github.com/dzangolab/laravel-api-auth.git"
             }
         ],
         "require": {
