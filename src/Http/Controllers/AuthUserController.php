@@ -42,8 +42,8 @@ class AuthUserController extends Controller
 
     public function signup(Request $request)
     {
-        $featureUserConfirmation = (bool) config('app.features.user_confirmation');
-        $useUsernameSameAsEmail = (bool) config('auth.username_same_as_email');
+        $featureUserConfirmation = (bool) config('dzangolabAuth.user_confirmation');
+        $useUsernameSameAsEmail = (bool) config('dzangolabAuth.username_same_as_email');
 
         // convert args to meaningful data to solution domain and ignore all other parts. not part of validation of data though
         $email = $request->get('email');

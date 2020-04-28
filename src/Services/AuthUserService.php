@@ -46,8 +46,8 @@ class AuthUserService
 
     public function createUser(array $data)
     {
-        $featureUserConfirmation = (bool) config('app.features.user_confirmation');
-        $useUsernameSameAsEmail = (bool) config('auth.username_same_as_email');
+        $featureUserConfirmation = (bool) config('dzangolabAuth.user_confirmation');
+        $useUsernameSameAsEmail = (bool) config('dzangolabAuth.username_same_as_email');
 
         $_data = [
             'email' => $data['email'],
@@ -234,7 +234,7 @@ class AuthUserService
         Cookie::queue(
             self::REFRESH_TOKEN,
             $authToken['refresh_token'],
-            config('auth.refresh_token_lifetime.default') / 60,
+            config('dzangolabAuth.refresh_token_lifetime.default') / 60,
             null,
             null,
             false,

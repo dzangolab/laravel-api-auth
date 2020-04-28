@@ -54,7 +54,7 @@ class AddUserCommand extends Command
         $password = $this->argument('password');
         $username = $this->argument('username');
 
-        $useUsernameSameAsEmail = (bool) config('auth.username_same_as_email');
+        $useUsernameSameAsEmail = (bool) config('dzangolabAuth.username_same_as_email');
 
         if ($useUsernameSameAsEmail) {
             $username = $email;

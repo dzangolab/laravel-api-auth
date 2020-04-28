@@ -203,7 +203,7 @@ class ClientLoginProxy
     protected function getPasswordClientId()
     {
         return config(sprintf(
-            'auth.password_clients.%s.id',
+            'dzangolabAuth.password_clients.%s.id',
             static::CLIENT_NAME
         ));
     }
@@ -211,7 +211,7 @@ class ClientLoginProxy
     protected function getPasswordClientSecret()
     {
         return config(sprintf(
-            'auth.password_clients.%s.secret',
+            'dzangolabAuth.password_clients.%s.secret',
             static::CLIENT_NAME
         ));
     }
