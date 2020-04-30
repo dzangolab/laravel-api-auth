@@ -4,16 +4,10 @@ namespace Dzangolab\Auth\Http\Requests;
 
 class CreateUserRequest extends ApiRequest
 {
-    public function authorize()
-    {
-        return true;
-    }
-
     public function rules()
     {
-        return [
-            'email' => 'required|email|max:255',
-            'password' => 'required|string|min:6',
-        ];
+        return config()->has('dzangolabAuth.validation.create_user.rules')
+            ? config('dzangolabAuth.validation.create_user.rules')
+            : [];
     }
 }

@@ -4,15 +4,10 @@ namespace Dzangolab\Auth\Http\Requests;
 
 class ResetPasswordRequest extends ApiRequest
 {
-    public function authorize()
-    {
-        return true;
-    }
-
     public function rules()
     {
-        return [
-            'password' => 'required|string|min:6',
-        ];
+        return config()->has('dzangolabAuth.validation.reset_password.rules')
+            ? config('dzangolabAuth.validation.reset_password.rules')
+            : [];
     }
 }

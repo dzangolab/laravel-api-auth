@@ -4,16 +4,11 @@ namespace Dzangolab\Auth\Http\Requests;
 
 class LoginRequest extends ApiRequest
 {
-    public function authorize()
-    {
-        return true;
-    }
-
     public function rules()
     {
-        return [
-            'username' => 'required',
-            'password' => 'required',
-        ];
+
+        return config()->has('dzangolabAuth.validation.login.rules')
+            ? config('dzangolabAuth.validation.login.rules')
+            : [];
     }
 }
