@@ -2,6 +2,8 @@
 
 namespace Dzangolab\Auth\Http\Controllers;
 
+use Dzangolab\Auth\Http\Requests\ResetEmailRequest;
+use Dzangolab\Auth\Http\Requests\ResetPasswordRequest;
 use Dzangolab\Auth\Services\AuthUserService;
 use Dzangolab\Auth\Services\PasswordResetService;
 use Illuminate\Http\JsonResponse;
@@ -19,7 +21,7 @@ class PasswordResetController extends Controller
         $this->passwordResetService = $passwordResetService;
     }
 
-    public function requestPasswordReset(Request $request)
+    public function requestPasswordReset(ResetEmailRequest $request)
     {
         $email = $request->post('email');
 
@@ -33,7 +35,7 @@ class PasswordResetController extends Controller
         return ['success' => false];
     }
 
-    public function reset(Request $request, $token)
+    public function reset(ResetPasswordRequest $request, $token)
     {
         $newPassword = $request->post('password');
 

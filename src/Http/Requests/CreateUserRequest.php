@@ -12,7 +12,8 @@ class CreateUserRequest extends ApiRequest
     public function rules()
     {
         return [
-            'password' => 'required',
+            'email' => 'required|email|max:255',
+            'password' => 'required|string|min:6',
         ];
     }
 }
