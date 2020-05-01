@@ -9,6 +9,17 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 abstract class ApiRequest extends FormRequest
 {
+    const CONFIG_VALIDATION_RULES = '';
+
+    public function rules()
+    {
+        $config = static::CONFIG_VALIDATION_RULES;
+
+        return config()->has($config)
+            ? config($config)
+            : [];
+    }
+
     protected function failedAuthorization()
     {
         throw new HttpException(403);
