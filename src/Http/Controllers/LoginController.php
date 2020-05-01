@@ -5,6 +5,7 @@ namespace Dzangolab\Auth\Http\Controllers;
 use Dzangolab\Auth\Exceptions\InvalidCredentialsException;
 use Dzangolab\Auth\Exceptions\UserDisabledException;
 use Dzangolab\Auth\Exceptions\UserNotFoundException;
+use Dzangolab\Auth\Http\Requests\LoginRequest;
 use Dzangolab\Auth\Services\AuthUserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -54,7 +55,7 @@ class LoginController extends Controller
         return Socialite::driver($provider)->stateless()->redirect();
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
         $username = $request->get('username');
         $password = $request->get('password');

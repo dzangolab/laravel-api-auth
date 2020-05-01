@@ -3,6 +3,9 @@
 namespace Dzangolab\Auth\Http\Controllers;
 
 use Dzangolab\Auth\Exceptions\WrongPasswordException;
+use Dzangolab\Auth\Http\Requests\CreateUserRequest;
+use Dzangolab\Auth\Http\Requests\UpdatePasswordRequest;
+use Dzangolab\Auth\Http\Requests\UpdateUserRequest;
 use Dzangolab\Auth\Services\AuthUserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -40,7 +43,7 @@ class AuthUserController extends Controller
             ->getUserWithProfile(Auth::user());
     }
 
-    public function signup(Request $request)
+    public function signup(CreateUserRequest $request)
     {
         $featureUserConfirmation = (bool) config('dzangolabAuth.user_confirmation');
         $useUsernameSameAsEmail = (bool) config('dzangolabAuth.username_same_as_email');
@@ -77,7 +80,7 @@ class AuthUserController extends Controller
         ];
     }
 
-    public function updateMe(Request $request)
+    public function updateMe(UpdateUserRequest $request)
     {
         $user = Auth::user();
 
@@ -86,7 +89,7 @@ class AuthUserController extends Controller
         return $this->getAuthUserService()->update($user, $data);
     }
 
-    public function updatePassword(Request $request)
+    public function updatePassword(UpdatePasswordRequest $request)
     {
         $arguments = [
             'current_password' => $request->get('password')['current_password'],

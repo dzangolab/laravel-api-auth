@@ -4,15 +4,5 @@ namespace Dzangolab\Auth\Http\Requests;
 
 class ResetEmailRequest extends ApiRequest
 {
-    public function authorize()
-    {
-        return true;
-    }
-
-    public function rules()
-    {
-        return [
-            'email' => 'required|email|max:255',
-        ];
-    }
+    const CONFIG_VALIDATION_RULES = 'dzangolabAuth.validation.reset_password_request.rules';
 }

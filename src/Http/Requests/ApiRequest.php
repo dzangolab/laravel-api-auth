@@ -2,25 +2,22 @@
 
 namespace Dzangolab\Auth\Http\Requests;
 
-use Illuminate\Contracts\Validation\ValidatesWhenResolved;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Request;
-use Illuminate\Validation\ValidatesWhenResolvedTrait;
+use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
-/** @deprecated directly use Illuminate Request instead */
-abstract class ApiRequest extends Request implements ValidatesWhenResolved
+abstract class ApiRequest extends FormRequest
 {
-    use ValidatesWhenResolvedTrait;
+    const CONFIG_VALIDATION_RULES = '';
 
-    protected $container;
-
-    public function setContainer(Container $container)
+    public function rules()
     {
-        $this->container = $container;
+        $config = static::CONFIG_VALIDATION_RULES;
 
-        return $this;
+        return config()->has($config)
+            ? config($config)
+            : [];
     }
 
     protected function failedAuthorization()
