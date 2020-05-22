@@ -17,13 +17,6 @@ return [
         'app' => env('AUTH_APP_REFRESH_TOKEN_LIFETIME', 864000),
     ],
 
-    'password_clients' => [
-        'app' => [
-            'id' => env('CLIENT_PASSWORD_CLIENT_ID'),
-            'secret' => env('CLIENT_PASSWORD_CLIENT_SECRET'),
-        ],
-    ],
-
     /*
     | Send email with confirmation link to enable the user after signup
     */
