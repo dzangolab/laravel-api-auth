@@ -13,6 +13,7 @@ use Dzangolab\Auth\Exceptions\UserNotFoundException;
 use Dzangolab\Auth\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +21,7 @@ use Optimus\ApiConsumer\Router;
 
 class ClientLoginProxy
 {
-    const CLIENT_NAME = 'app';
+    const CLIENT_NAME = 'client_proxy';
     const REFRESH_TOKEN = 'refreshToken';
 
     protected $apiConsumer;
@@ -57,6 +58,69 @@ class ClientLoginProxy
     }
 
     /**
+     * Proxy a request to the OAuth server.
+     *
+     * @param string $grantType what type of grant type should be proxied
+     * @param array  $data      the data to send to the server
+     *
+     * @return array
+     */
+    public function requestToken($grantType, array $data = [])
+    {
+        $client = $this->getPasswordClient();
+
+        $parameters = array_merge($data, [
+            'client_id' => $client->id,
+            'client_secret' => $client->secret,
+            'grant_type' => $grantType,
+        ]);
+
+        $response = $this->apiConsumer->post('/oauth/token', $parameters);
+
+        if (!$response->isSuccessful()) {
+            throw new InvalidCredentialsException();
+        }
+
+        $token = json_decode($response->getContent());
+
+        return [
+            'access_token' => $token->access_token,
+            'expires_in' => $token->expires_in,
+            'refresh_token' => $token->refresh_token,
+        ];
+    }
+
+    protected function getPasswordClient()
+    {
+        $client = $this->findFirstPasswordClient();
+
+        if (!$client) {
+            Artisan::call('passport:client', [
+                '-n' => true,
+                '--name' => static::CLIENT_NAME,
+                '--password' => true,
+            ]);
+
+            $client = $this->findFirstPasswordClient();
+        }
+
+        return $client;
+    }
+
+    protected function findFirstPasswordClient()
+    {
+        return DB::table('oauth_clients')
+            ->where('password_client', '=', 1)
+            ->where('revoked', '=', 0)
+            ->limit(1)
+            ->first();
+    }
+
+    /*
+     * Revoke all access tokens and refresh tokens other than current session.
+     */
+
+    /**
      * Attempt to refresh the access token used a refresh token that
      * has been saved in a cookie.
      *
@@ -79,6 +143,14 @@ class ClientLoginProxy
         ]);
     }
 
+    protected function getRequest()
+    {
+        return $this->request;
+    }
+
+    // usage: $password = generate_password(12); // for a 12-char password containing [0-9, a-z, A-Z]
+    // based on https://gist.github.com/zyphlar/7217f566fc83a9633959
+
     /**
      * Logs out the user. We revoke access token and refresh token.
      * Also instruct the client to forget the refresh cookie.
@@ -98,40 +170,8 @@ class ClientLoginProxy
         $this->cookie->queue($this->cookie->forget(self::REFRESH_TOKEN));
     }
 
-    /**
-     * Proxy a request to the OAuth server.
-     *
-     * @param string $grantType what type of grant type should be proxied
-     * @param array  $data      the data to send to the server
-     *
-     * @return array
-     */
-    public function requestToken($grantType, array $data = [])
-    {
-        $parameters = array_merge($data, [
-            'client_id' => $this->getPasswordClientId(),
-            'client_secret' => $this->getPasswordClientSecret(),
-            'grant_type' => $grantType,
-        ]);
+    // used for generate_password
 
-        $response = $this->apiConsumer->post('/oauth/token', $parameters);
-
-        if (!$response->isSuccessful()) {
-            throw new InvalidCredentialsException();
-        }
-
-        $token = json_decode($response->getContent());
-
-        return [
-            'access_token' => $token->access_token,
-            'expires_in' => $token->expires_in,
-            'refresh_token' => $token->refresh_token,
-        ];
-    }
-
-    /*
-     * Revoke all access tokens and refresh tokens other than current session.
-     */
     public function revokeOtherTokens()
     {
         $access_token = Auth::user()->token();
@@ -178,8 +218,6 @@ class ClientLoginProxy
         Cookie::queue($this->cookie->forget(self::REFRESH_TOKEN));
     }
 
-    // usage: $password = generate_password(12); // for a 12-char password containing [0-9, a-z, A-Z]
-    // based on https://gist.github.com/zyphlar/7217f566fc83a9633959
     protected function generate_password($length)
     {
         return substr(
@@ -189,7 +227,6 @@ class ClientLoginProxy
         );
     }
 
-    // used for generate_password
     protected function get_random_bytes($nb_bytes = 32)
     {
         $bytes = openssl_random_pseudo_bytes($nb_bytes, $strong);
@@ -198,26 +235,5 @@ class ClientLoginProxy
         } else {
             throw new Exception('Unable to generate secure token from OpenSSL.');
         }
-    }
-
-    protected function getPasswordClientId()
-    {
-        return config(sprintf(
-            'dzangolabAuth.password_clients.%s.id',
-            static::CLIENT_NAME
-        ));
-    }
-
-    protected function getPasswordClientSecret()
-    {
-        return config(sprintf(
-            'dzangolabAuth.password_clients.%s.secret',
-            static::CLIENT_NAME
-        ));
-    }
-
-    protected function getRequest()
-    {
-        return $this->request;
     }
 }
