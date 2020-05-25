@@ -14,6 +14,7 @@ use Dzangolab\Auth\Listeners\UserWasCreatedListener;
 use Illuminate\Contracts\Validation\ValidatesWhenResolved;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Passport\Console\ClientCommand;
 use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
@@ -85,6 +86,11 @@ class AuthServiceProvider extends ServiceProvider
                 AddUserCommand::class,
             ]);
         }
+
+        // this is called from code for auto client creation
+        $this->commands([
+            ClientCommand::class,
+        ]);
 
         /*// Api request service provider
         $this->app->afterResolving(ValidatesWhenResolved::class, function ($resolved) {
