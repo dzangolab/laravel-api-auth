@@ -4,13 +4,7 @@ namespace Dzangolab\Auth;
 
 use Carbon\Carbon;
 use Dzangolab\Auth\Console\AddUserCommand;
-use Dzangolab\Auth\Events\LoginEvent;
-use Dzangolab\Auth\Events\PasswordChangedEvent;
-use Dzangolab\Auth\Events\UserWasCreated;
 use Dzangolab\Auth\Http\Requests\ApiRequest;
-use Dzangolab\Auth\Listeners\LoginListener;
-use Dzangolab\Auth\Listeners\PasswordChangeListener;
-use Dzangolab\Auth\Listeners\UserWasCreatedListener;
 use Illuminate\Contracts\Validation\ValidatesWhenResolved;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\ServiceProvider;
