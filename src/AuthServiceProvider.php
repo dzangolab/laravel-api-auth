@@ -67,6 +67,14 @@ class AuthServiceProvider extends ServiceProvider
             $this->commands([
                 AddUserCommand::class,
             ]);
+
+            $this->loadViewsFrom(__DIR__.'/../resources/views', 'dzangolab-auth');
+
+            $this->publishes([
+                __DIR__.'/../resources/views' => resource_path('views/vendor/dzangolab-auth'),
+            ]);
+
+            $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'dzangolab-auth');
         }
 
         // this is called from code for auto client creation
