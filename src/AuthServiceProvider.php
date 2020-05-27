@@ -19,18 +19,6 @@ use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
 {
-    protected $listen = [
-        LoginEvent::class => [
-            LoginListener::class,
-        ],
-        PasswordChangedEvent::class => [
-            PasswordChangeListener::class,
-        ],
-        UserWasCreated::class => [
-            UserWasCreatedListener::class,
-        ],
-    ];
-
     /**
      * Register any authentication / authorization services.
      *
