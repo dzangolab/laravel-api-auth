@@ -73,11 +73,11 @@ class AuthServiceProvider extends ServiceProvider
             ]);
 
             $this->publishes([
-                __DIR__.'/../resources/views' => resource_path('views/vendor/dzangolab-auth'),
+                __DIR__.'/../resources/views' => config('dzangolabAuth.paths.views'),
             ], 'auth-views');
 
             $this->publishes([
-                __DIR__.'/../resources/lang' => resource_path('lang/vendor/dzangolab-auth'),
+                __DIR__.'/../resources/lang' => config('dzangolabAuth.paths.lang'),
             ], 'auth-lang');
         }
 
