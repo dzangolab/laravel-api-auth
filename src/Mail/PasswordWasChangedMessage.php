@@ -11,7 +11,7 @@ class PasswordWasChangedMessage extends Mailable
     use Queueable;
     use SerializesModels;
 
-    const SUBJECT = 'emails.user.subject.password_changed';
+    const SUBJECT = 'dzangolab-auth::emails.user.subject.password_changed';
 
     const TEMPLATE = 'password_changed';
 
@@ -81,7 +81,7 @@ class PasswordWasChangedMessage extends Mailable
     protected function getTemplate()
     {
         return sprintf(
-            'emails.user.%s.%s',
+            'dzangolab-auth::emails.user.%s.%s',
             $this->getLocale(),
             static::TEMPLATE
         );

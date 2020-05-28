@@ -11,7 +11,7 @@ class PasswordResetMessage extends Mailable
     use Queueable;
     use SerializesModels;
 
-    const SUBJECT = 'emails.user.subject.password_reset';
+    const SUBJECT = 'dzangolab-auth::emails.user.subject.password_reset';
 
     const TEMPLATE = 'password_reset';
 
@@ -95,7 +95,7 @@ class PasswordResetMessage extends Mailable
     protected function getTemplate()
     {
         return sprintf(
-            'emails.user.%s.%s',
+            'dzangolab-auth::emails.user.%s.%s',
             $this->getLocale(),
             static::TEMPLATE
         );
