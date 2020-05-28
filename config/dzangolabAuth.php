@@ -9,6 +9,11 @@ return [
         'app' => env('AUTH_APP_ACCESS_TOKEN_LIFETIME', 600),
     ],
 
+    'paths' => [
+        'lang' => base_path('resources/lang/vendor/dzangolab-auth'),
+        'views' => base_path('resources/views/vendor/dzangolab-auth'),
+    ],
+
     /*
     | Lifetime of refresh token per client in seconds
     */
