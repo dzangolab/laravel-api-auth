@@ -51,6 +51,10 @@ class AuthServiceProvider extends ServiceProvider
             Carbon::now()->addSeconds($refresh_token_lifetime)
         );
 
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'dzangolab-auth');
+
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'dzangolab-auth');
+
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/../database/migrations' => database_path('migrations'),
@@ -68,13 +72,13 @@ class AuthServiceProvider extends ServiceProvider
                 AddUserCommand::class,
             ]);
 
-            $this->loadViewsFrom(__DIR__.'/../resources/views', 'dzangolab-auth');
-
             $this->publishes([
                 __DIR__.'/../resources/views' => resource_path('views/vendor/dzangolab-auth'),
-            ]);
+            ], 'auth-views');
 
-            $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'dzangolab-auth');
+            $this->publishes([
+                __DIR__.'/../resources/lang' => resource_path('lang/vendor/dzangolab-auth'),
+            ], 'auth-lang');
         }
 
         // this is called from code for auto client creation
