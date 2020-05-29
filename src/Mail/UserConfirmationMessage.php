@@ -11,7 +11,7 @@ class UserConfirmationMessage extends Mailable
     use Queueable;
     use SerializesModels;
 
-    const SUBJECT = 'emails.user.subject.confirmation';
+    const SUBJECT = 'dzangolab-auth::emails.user.subject.confirmation';
 
     const TEMPLATE = 'confirmation';
 
@@ -68,7 +68,7 @@ class UserConfirmationMessage extends Mailable
     protected function getTemplate()
     {
         return sprintf(
-            'emails.user.%s.%s',
+            'dzangolab-auth::emails.user.%s.%s',
             $this->getLocale(),
             static::TEMPLATE
         );

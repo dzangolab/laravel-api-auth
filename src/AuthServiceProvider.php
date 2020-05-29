@@ -4,13 +4,7 @@ namespace Dzangolab\Auth;
 
 use Carbon\Carbon;
 use Dzangolab\Auth\Console\AddUserCommand;
-use Dzangolab\Auth\Events\LoginEvent;
-use Dzangolab\Auth\Events\PasswordChangedEvent;
-use Dzangolab\Auth\Events\UserWasCreated;
 use Dzangolab\Auth\Http\Requests\ApiRequest;
-use Dzangolab\Auth\Listeners\LoginListener;
-use Dzangolab\Auth\Listeners\PasswordChangeListener;
-use Dzangolab\Auth\Listeners\UserWasCreatedListener;
 use Illuminate\Contracts\Validation\ValidatesWhenResolved;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\ServiceProvider;
@@ -19,18 +13,6 @@ use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
 {
-    protected $listen = [
-        LoginEvent::class => [
-            LoginListener::class,
-        ],
-        PasswordChangedEvent::class => [
-            PasswordChangeListener::class,
-        ],
-        UserWasCreated::class => [
-            UserWasCreatedListener::class,
-        ],
-    ];
-
     /**
      * Register any authentication / authorization services.
      *
@@ -69,6 +51,10 @@ class AuthServiceProvider extends ServiceProvider
             Carbon::now()->addSeconds($refresh_token_lifetime)
         );
 
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'dzangolab-auth');
+
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'dzangolab-auth');
+
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/../database/migrations' => database_path('migrations'),
@@ -85,6 +71,14 @@ class AuthServiceProvider extends ServiceProvider
             $this->commands([
                 AddUserCommand::class,
             ]);
+
+            $this->publishes([
+                __DIR__.'/../resources/views' => config('dzangolabAuth.paths.views'),
+            ], 'auth-views');
+
+            $this->publishes([
+                __DIR__.'/../resources/lang' => config('dzangolabAuth.paths.lang'),
+            ], 'auth-lang');
         }
 
         // this is called from code for auto client creation
