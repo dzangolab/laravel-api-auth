@@ -3,6 +3,10 @@
 namespace Dzangolab\Auth\Http\Controllers;
 
 use Dzangolab\Auth\Exceptions\Http\TokenException;
+use Dzangolab\Auth\Exceptions\Http\UserAlreadyExistsException as UserAlreadyExistsHttpException;
+use Dzangolab\Auth\Exceptions\Http\UserDisabledException as UserDisabledHttpException;
+use Dzangolab\Auth\Exceptions\UserAlreadyExistsException;
+use Dzangolab\Auth\Exceptions\UserDisabledException;
 use Dzangolab\Auth\Http\Requests\CreateUserRequest;
 use Dzangolab\Auth\Http\Requests\UpdatePasswordRequest;
 use Dzangolab\Auth\Http\Requests\UpdateUserRequest;
@@ -61,14 +65,19 @@ class AuthUserController extends Controller
             $username = $email;
         }
 
-        $user = $this->getAuthUserService()->createUser([
-            'email' => $email,
-            'password' => $password,
-            'username' => $username,
-        ]);
+        try {
+            $user = $this->getAuthUserService()->createUser([
+                'email' => $email,
+                'password' => $password,
+                'username' => $username,
+            ]);
 
-        $authToken = $this->getAuthUserService()
-            ->login($username, $password);
+            $authToken = $this->getAuthUserService()->login($username, $password);
+        } catch (UserAlreadyExistsException $exception) {
+            throw new UserAlreadyExistsHttpException($exception->getMessage());
+        } catch (UserDisabledException $exception) {
+            throw new UserDisabledHttpException($user);
+        }
 
         /* FIXME [UKS 2020-03-07] clients use word 'auth_tokens' so kept
             but AuthToken is specific one token collection */
@@ -94,7 +103,11 @@ class AuthUserController extends Controller
             'new_password' => $request->get('password')['new_password'],
         ];
 
-        $this->getAuthUserService()->updatePassword($arguments);
+        try {
+            $this->getAuthUserService()->updatePassword($arguments);
+        } catch (Exception $exception) {
+            throw new WrongPasswordException($exception->getMessage());
+        }
 
         $this->getAuthUserService()->revokeOtherTokens();
 

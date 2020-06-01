@@ -2,16 +2,12 @@
 
 namespace Dzangolab\Auth\Exceptions;
 
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Exception;
 
-class UserAlreadyExistsException extends UnprocessableEntityHttpException
+class UserAlreadyExistsException extends Exception
 {
     public function __construct($message = 'user already exists')
     {
-        parent::__construct(
-            $message,
-            null,
-            AuthErrorCodes::USER_ALREADY_EXISTS
-        );
+        parent::__construct($message);
     }
 }

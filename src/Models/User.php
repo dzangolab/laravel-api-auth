@@ -5,7 +5,7 @@ namespace Dzangolab\Auth\Models;
 use Carbon\Carbon;
 use Dzangolab\Auth\Exceptions\UserDisabledException;
 use Dzangolab\Auth\Exceptions\UserNotFoundException;
-use Dzangolab\Auth\Exceptions\WrongPasswordException;
+use Exception;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\MustVerifyEmail;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -191,7 +191,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
             $user->save();
         } else {
-            throw new WrongPasswordException('wrong current password');
+            throw new Exception('wrong current password');
         }
 
         return $user;

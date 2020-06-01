@@ -3,7 +3,7 @@
 namespace Dzangolab\Auth\Http\Controllers;
 
 use Dzangolab\Auth\Exceptions\Http\TokenException;
-use Dzangolab\Auth\Exceptions\UserNotFoundException;
+use Dzangolab\Auth\Exceptions\Http\UserNotFoundException;
 use Dzangolab\Auth\Http\Requests\ResetEmailRequest;
 use Dzangolab\Auth\Http\Requests\ResetPasswordRequest;
 use Dzangolab\Auth\Services\AuthUserService;

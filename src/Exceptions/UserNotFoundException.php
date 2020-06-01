@@ -2,12 +2,12 @@
 
 namespace Dzangolab\Auth\Exceptions;
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Exception;
 
-class UserNotFoundException extends NotFoundHttpException
+class UserNotFoundException extends Exception
 {
     public function __construct()
     {
-        parent::__construct('user not found', null, AuthErrorCodes::USER_NOT_FOUND);
+        parent::__construct('User not found');
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Dzangolab\Auth\Http\Controllers;
 
-use Dzangolab\Auth\Exceptions\InvalidCredentialsException;
+use Dzangolab\Auth\Exceptions\Http\InvalidCredentialsException;
 use Dzangolab\Auth\Exceptions\UserDisabledException;
 use Dzangolab\Auth\Exceptions\UserNotFoundException;
 use Dzangolab\Auth\Http\Requests\LoginRequest;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Dzangolab\Auth\Exceptions;
+namespace Dzangolab\Auth\Exceptions\Http;
 
 class AuthErrorCodes
 {
