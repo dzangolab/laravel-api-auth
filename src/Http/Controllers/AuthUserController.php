@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class AuthUserController extends Controller
 {
@@ -24,16 +25,21 @@ class AuthUserController extends Controller
 
     public function enableUserWithToken(Request $request)
     {
-        $confirmationToken = $request->get('confirmationToken');
+        $enabled = false;
 
-        if ($this->getAuthUserService()->enableUserWithToken($confirmationToken)) {
-            return [
-                'success' => true,
-            ];
+        $confirmationToken = $request->get('token');
+
+        if ($confirmationToken) {
+            $enabled = $this->getAuthUserService()->enableUserWithToken($confirmationToken);
+        }
+
+        if (!$enabled) {
+            throw new BadRequestHttpException('Invalid confirmation token');
         }
 
         return [
-            'success' => false,
+            'success' => true,
+            'message' => 'User enabled successfully.',
         ];
     }
 
@@ -57,17 +63,11 @@ class AuthUserController extends Controller
             $username = $email;
         }
 
-        $this->getAuthUserService()->createUser([
+        $user = $this->getAuthUserService()->createUser([
             'email' => $email,
             'password' => $password,
             'username' => $username,
         ]);
-
-        if ($featureUserConfirmation) {
-            return [
-                'success' => true,
-            ];
-        }
 
         $authToken = $this->getAuthUserService()
             ->login($username, $password);
@@ -96,16 +96,7 @@ class AuthUserController extends Controller
             'new_password' => $request->get('password')['new_password'],
         ];
 
-        try {
-            $this->getAuthUserService()->updatePassword($arguments);
-        } catch (WrongPasswordException $exception) {
-            Log::error($exception->getMessage());
-
-            return [
-                'success' => false,
-                'message' => 'Failed to update password.',
-            ];
-        }
+        $this->getAuthUserService()->updatePassword($arguments);
 
         $this->getAuthUserService()->revokeOtherTokens();
 
