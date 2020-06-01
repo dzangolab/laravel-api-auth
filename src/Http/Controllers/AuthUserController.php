@@ -2,6 +2,7 @@
 
 namespace Dzangolab\Auth\Http\Controllers;
 
+use Dzangolab\Auth\Exceptions\Http\TokenException;
 use Dzangolab\Auth\Exceptions\WrongPasswordException;
 use Dzangolab\Auth\Http\Requests\CreateUserRequest;
 use Dzangolab\Auth\Http\Requests\UpdatePasswordRequest;
@@ -34,7 +35,7 @@ class AuthUserController extends Controller
         }
 
         if (!$enabled) {
-            throw new BadRequestHttpException('Invalid confirmation token');
+            throw new TokenException('Invalid confirmation token');
         }
 
         return [

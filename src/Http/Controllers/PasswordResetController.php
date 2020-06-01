@@ -2,6 +2,8 @@
 
 namespace Dzangolab\Auth\Http\Controllers;
 
+use Dzangolab\Auth\Exceptions\Http\TokenException;
+use Dzangolab\Auth\Exceptions\UserNotFoundException;
 use Dzangolab\Auth\Http\Requests\ResetEmailRequest;
 use Dzangolab\Auth\Http\Requests\ResetPasswordRequest;
 use Dzangolab\Auth\Services\AuthUserService;
@@ -28,11 +30,9 @@ class PasswordResetController extends Controller
         $result = $this->getPasswordResetService()
             ->sendPasswordResetMail($email);
 
-        if ($result) {
-            return ['success' => true];
-        }
-
-        return ['success' => false];
+        return [
+            'success' => true,
+        ];
     }
 
     public function reset(ResetPasswordRequest $request, $token)
@@ -42,27 +42,30 @@ class PasswordResetController extends Controller
         $passwordReset = $this->getPasswordResetService()->getByToken($token);
 
         if (is_null($passwordReset)) {
-            return ['success' => false];
+            throw new TokenException('Invalid reset token');
         }
 
         $user = $this->getPasswordResetService()
             ->getUserByEmail($passwordReset->email);
 
         if (!$user) {
-            return ['success' => false];
+            throw new UserNotFoundException('Password reset user not found');
         }
 
         $result = $this->getAuthUserService()->resetPassword($user, $newPassword);
 
         if (!$result) {
-            return ['success' => false];
+            throw new Exception('Failed to reset password');
         }
 
         $this->getAuthUserService()->revokeTokens($user);
 
         $this->getPasswordResetService()->deleteByToken($token);
 
-        return ['success' => true];
+        return [
+            'success' => true,
+            'message' => 'Password changed successfully',
+        ];
     }
 
     protected function getAuthUserService(): AuthUserService
