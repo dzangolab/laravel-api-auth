@@ -155,7 +155,7 @@ class AuthUserService
         $this->getClientLoginProxy()->logout();
     }
 
-    public function resetPassword(User $user, $newPassword): User
+    public function resetPassword(User $user, $newPassword): ?User
     {
         $user = $this->getUserRepository()->resetPassword($user, $newPassword);
 
