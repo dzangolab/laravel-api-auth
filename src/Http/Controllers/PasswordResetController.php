@@ -9,7 +9,6 @@ use Dzangolab\Auth\Http\Requests\ResetPasswordRequest;
 use Dzangolab\Auth\Services\AuthUserService;
 use Dzangolab\Auth\Services\PasswordResetService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class PasswordResetController extends Controller

@@ -3,7 +3,6 @@
 namespace Dzangolab\Auth\Http\Controllers;
 
 use Dzangolab\Auth\Exceptions\Http\TokenException;
-use Dzangolab\Auth\Exceptions\WrongPasswordException;
 use Dzangolab\Auth\Http\Requests\CreateUserRequest;
 use Dzangolab\Auth\Http\Requests\UpdatePasswordRequest;
 use Dzangolab\Auth\Http\Requests\UpdateUserRequest;
@@ -12,8 +11,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class AuthUserController extends Controller
 {

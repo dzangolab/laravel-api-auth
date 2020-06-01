@@ -57,6 +57,55 @@ class ClientLoginProxy
         );
     }
 
+    /*
+     * Revoke all access tokens and refresh tokens other than current session.
+     */
+
+    /**
+     * Attempt to refresh the access token used a refresh token that
+     * has been saved in a cookie.
+     *
+     * @param null $refreshToken
+     *
+     * @return array
+     */
+    public function attemptRefresh($refreshToken = null)
+    {
+        if (!$refreshToken) {
+            $refreshToken = $this->getRequest()->cookie(self::REFRESH_TOKEN);
+
+            if (!$refreshToken) {
+                $refreshToken = $this->getRequest()->input(self::REFRESH_TOKEN);
+            }
+        }
+
+        return $this->requestToken('refresh_token', [
+            'refresh_token' => $refreshToken,
+        ]);
+    }
+
+    // usage: $password = generate_password(12); // for a 12-char password containing [0-9, a-z, A-Z]
+    // based on https://gist.github.com/zyphlar/7217f566fc83a9633959
+
+    /**
+     * Logs out the user. We revoke access token and refresh token.
+     * Also instruct the client to forget the refresh cookie.
+     */
+    public function logout()
+    {
+        $accessToken = Auth::user()->token();
+
+        DB::table('oauth_refresh_tokens')
+            ->where('access_token_id', $accessToken->id)
+            ->update([
+                'revoked' => true,
+            ]);
+
+        $accessToken->revoke();
+
+        $this->cookie->queue($this->cookie->forget(self::REFRESH_TOKEN));
+    }
+
     /**
      * Proxy a request to the OAuth server.
      *
@@ -88,86 +137,6 @@ class ClientLoginProxy
             'expires_in' => $token->expires_in,
             'refresh_token' => $token->refresh_token,
         ];
-    }
-
-    protected function getPasswordClient()
-    {
-        $client = $this->findFirstPasswordClient();
-
-        if (!$client) {
-            Artisan::call('passport:client', [
-                '-n' => true,
-                '--name' => static::CLIENT_NAME,
-                '--password' => true,
-            ]);
-
-            $client = $this->findFirstPasswordClient();
-        }
-
-        return $client;
-    }
-
-    protected function findFirstPasswordClient()
-    {
-        return DB::table('oauth_clients')
-            ->where('password_client', '=', 1)
-            ->where('revoked', '=', 0)
-            ->limit(1)
-            ->first();
-    }
-
-    /*
-     * Revoke all access tokens and refresh tokens other than current session.
-     */
-
-    /**
-     * Attempt to refresh the access token used a refresh token that
-     * has been saved in a cookie.
-     *
-     * @param null $refreshToken
-     *
-     * @return array
-     */
-    public function attemptRefresh($refreshToken = null)
-    {
-        if (!$refreshToken) {
-            $refreshToken = $this->getRequest()->cookie(self::REFRESH_TOKEN);
-
-            if (!$refreshToken) {
-                $refreshToken = $this->getRequest()->input(self::REFRESH_TOKEN);
-            }
-        }
-
-        return $this->requestToken('refresh_token', [
-            'refresh_token' => $refreshToken,
-        ]);
-    }
-
-    protected function getRequest()
-    {
-        return $this->request;
-    }
-
-    // usage: $password = generate_password(12); // for a 12-char password containing [0-9, a-z, A-Z]
-    // based on https://gist.github.com/zyphlar/7217f566fc83a9633959
-
-    /**
-     * Logs out the user. We revoke access token and refresh token.
-     * Also instruct the client to forget the refresh cookie.
-     */
-    public function logout()
-    {
-        $accessToken = Auth::user()->token();
-
-        DB::table('oauth_refresh_tokens')
-            ->where('access_token_id', $accessToken->id)
-            ->update([
-                'revoked' => true,
-            ]);
-
-        $accessToken->revoke();
-
-        $this->cookie->queue($this->cookie->forget(self::REFRESH_TOKEN));
     }
 
     // used for generate_password
@@ -218,6 +187,15 @@ class ClientLoginProxy
         Cookie::queue($this->cookie->forget(self::REFRESH_TOKEN));
     }
 
+    protected function findFirstPasswordClient()
+    {
+        return DB::table('oauth_clients')
+            ->where('password_client', '=', 1)
+            ->where('revoked', '=', 0)
+            ->limit(1)
+            ->first();
+    }
+
     protected function generate_password($length)
     {
         return substr(
@@ -235,5 +213,27 @@ class ClientLoginProxy
         } else {
             throw new Exception('Unable to generate secure token from OpenSSL.');
         }
+    }
+
+    protected function getPasswordClient()
+    {
+        $client = $this->findFirstPasswordClient();
+
+        if (!$client) {
+            Artisan::call('passport:client', [
+                '-n' => true,
+                '--name' => static::CLIENT_NAME,
+                '--password' => true,
+            ]);
+
+            $client = $this->findFirstPasswordClient();
+        }
+
+        return $client;
+    }
+
+    protected function getRequest()
+    {
+        return $this->request;
     }
 }

@@ -29,8 +29,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 {
     use Authenticatable;
     use CanResetPassword;
-    use MustVerifyEmail;
     use HasApiTokens;
+    use MustVerifyEmail;
     use Notifiable;
 
     /**
