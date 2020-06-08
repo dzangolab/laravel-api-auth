@@ -1,11 +1,11 @@
 <?php
 
-namespace Dzangolab\Auth\Exceptions;
+namespace Dzangolab\Auth\Exceptions\Http;
 
 use Dzangolab\Auth\Models\User;
-use Exception;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
-class UserDisabledException extends Exception
+class UserDisabledException extends AccessDeniedHttpException
 {
     protected $user;
 
@@ -17,7 +17,9 @@ class UserDisabledException extends Exception
             sprintf(
                 'User `%s` is disabled.',
                 $user->username
-            )
+            ),
+            null,
+            AuthErrorCodes::USER_IS_DISABLED
         );
     }
 

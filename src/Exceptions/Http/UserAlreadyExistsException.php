@@ -4,14 +4,14 @@ namespace Dzangolab\Auth\Exceptions\Http;
 
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
-class TokenException extends UnprocessableEntityHttpException
+class UserAlreadyExistsException extends UnprocessableEntityHttpException
 {
-    public function __construct($message = 'Invalid token')
+    public function __construct($message = 'user already exists')
     {
         parent::__construct(
             $message,
             null,
-            AuthErrorCodes::INVALID_TOKEN
+            AuthErrorCodes::USER_ALREADY_EXISTS
         );
     }
 }

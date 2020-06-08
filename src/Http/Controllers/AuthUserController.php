@@ -2,16 +2,21 @@
 
 namespace Dzangolab\Auth\Http\Controllers;
 
-use Dzangolab\Auth\Exceptions\WrongPasswordException;
+use Dzangolab\Auth\Exceptions\Http\TokenException;
+use Dzangolab\Auth\Exceptions\Http\UserAlreadyExistsException as UserAlreadyExistsHttpException;
+use Dzangolab\Auth\Exceptions\Http\UserDisabledException as UserDisabledHttpException;
+use Dzangolab\Auth\Exceptions\Http\WrongPasswordException;
+use Dzangolab\Auth\Exceptions\UserAlreadyExistsException;
+use Dzangolab\Auth\Exceptions\UserDisabledException;
 use Dzangolab\Auth\Http\Requests\CreateUserRequest;
 use Dzangolab\Auth\Http\Requests\UpdatePasswordRequest;
 use Dzangolab\Auth\Http\Requests\UpdateUserRequest;
 use Dzangolab\Auth\Services\AuthUserService;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class AuthUserController extends Controller
 {
@@ -24,16 +29,21 @@ class AuthUserController extends Controller
 
     public function enableUserWithToken(Request $request)
     {
-        $confirmationToken = $request->get('confirmationToken');
+        $enabled = false;
 
-        if ($this->getAuthUserService()->enableUserWithToken($confirmationToken)) {
-            return [
-                'success' => true,
-            ];
+        $confirmationToken = $request->get('token');
+
+        if ($confirmationToken) {
+            $enabled = $this->getAuthUserService()->enableUserWithToken($confirmationToken);
+        }
+
+        if (!$enabled) {
+            throw new TokenException('Invalid confirmation token');
         }
 
         return [
-            'success' => false,
+            'success' => true,
+            'message' => 'User enabled successfully.',
         ];
     }
 
@@ -57,20 +67,19 @@ class AuthUserController extends Controller
             $username = $email;
         }
 
-        $this->getAuthUserService()->createUser([
-            'email' => $email,
-            'password' => $password,
-            'username' => $username,
-        ]);
+        try {
+            $user = $this->getAuthUserService()->createUser([
+                'email' => $email,
+                'password' => $password,
+                'username' => $username,
+            ]);
 
-        if ($featureUserConfirmation) {
-            return [
-                'success' => true,
-            ];
+            $authToken = $this->getAuthUserService()->login($username, $password);
+        } catch (UserAlreadyExistsException $exception) {
+            throw new UserAlreadyExistsHttpException($exception->getMessage());
+        } catch (UserDisabledException $exception) {
+            throw new UserDisabledHttpException($user);
         }
-
-        $authToken = $this->getAuthUserService()
-            ->login($username, $password);
 
         /* FIXME [UKS 2020-03-07] clients use word 'auth_tokens' so kept
             but AuthToken is specific one token collection */
@@ -98,13 +107,8 @@ class AuthUserController extends Controller
 
         try {
             $this->getAuthUserService()->updatePassword($arguments);
-        } catch (WrongPasswordException $exception) {
-            Log::error($exception->getMessage());
-
-            return [
-                'success' => false,
-                'message' => 'Failed to update password.',
-            ];
+        } catch (Exception $exception) {
+            throw new WrongPasswordException($exception->getMessage());
         }
 
         $this->getAuthUserService()->revokeOtherTokens();

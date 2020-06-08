@@ -8,7 +8,7 @@ use Dzangolab\Auth\Events\LoginEvent;
 use Dzangolab\Auth\Events\PasswordChangedEvent;
 use Dzangolab\Auth\Events\UserWasCreated;
 use Dzangolab\Auth\Events\UserWasUpdated;
-use Dzangolab\Auth\Exceptions\UserAlreadyExistsException;
+use Dzangolab\Auth\Exceptions\Http\UserAlreadyExistsException;
 use Dzangolab\Auth\Models\User;
 use Exception;
 use Illuminate\Events\Dispatcher;
@@ -155,7 +155,7 @@ class AuthUserService
         $this->getClientLoginProxy()->logout();
     }
 
-    public function resetPassword(User $user, $newPassword): User
+    public function resetPassword(User $user, $newPassword): ?User
     {
         $user = $this->getUserRepository()->resetPassword($user, $newPassword);
 
