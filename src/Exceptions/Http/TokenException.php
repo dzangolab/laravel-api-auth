@@ -2,16 +2,16 @@
 
 namespace Dzangolab\Auth\Exceptions\Http;
 
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
-class TokenException extends HttpException
+class TokenException extends UnprocessableEntityHttpException
 {
-    public function __construct($message = 'Token error.')
+    public function __construct($message = 'Invalid token')
     {
         parent::__construct(
-            Response::HTTP_UNPROCESSABLE_ENTITY,
-            $message
+            $message,
+            null,
+            AuthErrorCodes::INVALID_TOKEN
         );
     }
 }

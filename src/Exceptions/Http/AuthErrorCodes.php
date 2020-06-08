@@ -5,6 +5,7 @@ namespace Dzangolab\Auth\Exceptions\Http;
 class AuthErrorCodes
 {
     const INVALID_CREDENTIALS = 969;
+    const INVALID_TOKEN = 970;
 
     const UNAUTHORIZED = 401;
     const USER_ALREADY_DISABLED = 996;
