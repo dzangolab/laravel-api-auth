@@ -8,7 +8,7 @@ use Dzangolab\Auth\Events\LoginEvent;
 use Dzangolab\Auth\Events\PasswordChangedEvent;
 use Dzangolab\Auth\Events\UserWasCreated;
 use Dzangolab\Auth\Events\UserWasUpdated;
-use Dzangolab\Auth\Exceptions\Http\UserAlreadyExistsException;
+use Dzangolab\Auth\Exceptions\UserAlreadyExistsException;
 use Dzangolab\Auth\Models\User;
 use Exception;
 use Illuminate\Events\Dispatcher;
