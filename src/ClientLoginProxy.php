@@ -7,9 +7,7 @@
 
 namespace Dzangolab\Auth;
 
-use Dzangolab\Auth\Exceptions\InvalidCredentialsException;
-use Dzangolab\Auth\Exceptions\UserDisabledException;
-use Dzangolab\Auth\Exceptions\UserNotFoundException;
+use Dzangolab\Auth\Exceptions\Http\InvalidCredentialsException;
 use Dzangolab\Auth\Models\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -42,9 +40,6 @@ class ClientLoginProxy
      * @param string $password
      *
      * @return array
-     *
-     * @throws UserNotFoundException
-     * @throws UserDisabledException
      */
     public function attemptLogin($username, $password)
     {
