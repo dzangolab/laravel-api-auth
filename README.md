@@ -47,3 +47,34 @@ Laravel auth package to be used for API.
     ```
 1. Run `php artisan migrate` to create tables.
 1. Now you can use the auth and api middleware as `Route::middleware(['auth:api'])` to define routes.
+
+###Add `code` to exception response.
+
+override `convertExceptionToArray` method in `app/Exception/Handler.php` and add code to the array.
+```php
+<?php
+
+namespace App\Exceptions;
+
+use Illuminate\Support\Arr;
+
+class Handler extends ExceptionHandler
+{
+    protected function convertExceptionToArray(Throwable $e)
+    {
+        return config('app.debug') ? [
+            'code' => $e->getCode(),
+            'message' => $e->getMessage(),
+            'exception' => get_class($e),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => collect($e->getTrace())->map(function ($trace) {
+                return Arr::except($trace, ['args']);
+            })->all(),
+        ] : [
+            'code' => $e->getCode(),
+            'message' => $this->isHttpException($e) ? $e->getMessage() : 'Server Error',
+        ];
+    }
+}
+```
