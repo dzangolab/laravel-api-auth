@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Laravel auth package to be used for API.
+Laravel auth package to be used for API. It supports upto Laravel 7.
 
 ### Installation
 
@@ -48,9 +48,10 @@ Laravel auth package to be used for API.
 1. Run `php artisan migrate` to create tables.
 1. Now you can use the auth and api middleware as `Route::middleware(['auth:api'])` to define routes.
 
-###Add `code` to exception response.
+### Add `code` to exception response
 
-override `convertExceptionToArray` method in `app/Exception/Handler.php` and add code to the array.
+Override `convertExceptionToArray` method in `app/Exception/Handler.php` and add code to the array.
+
 ```php
 <?php
 
