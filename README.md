@@ -2,7 +2,12 @@
 
 ## Introduction
 
-Laravel auth package to be used for API. It supports upto Laravel 7.
+Laravel auth package to be used for API.
+
+## Requirement:
+
+- Laravel framework `^7.4.0`
+- Laravel Passport `^8.4.3`
 
 ### Installation
 
