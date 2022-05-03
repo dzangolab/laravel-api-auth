@@ -6,7 +6,7 @@ Laravel auth package to be used for API.
 
 ## Requirement:
 
-- Laravel framework `^8.6.0`
+- Laravel framework `^9.2.0`
 - Laravel Passport `^10.0.1`
 
 ### Installation
@@ -14,10 +14,6 @@ Laravel auth package to be used for API.
 1. Add package to composer.json and do `composer update`
     ```php
         "repositories": [
-            {
-               "type": "git",
-               "url": "https://github.com/dzangolab/laravel-api-consumer.git"
-            },
             {
                 "type": "git",
                 "url": "https://github.com/dzangolab/laravel-api-auth.git"
