@@ -26,8 +26,10 @@ class PasswordResetController extends Controller
     {
         $email = $request->post('email');
 
+        $url = $request->post('url');
+
         $result = $this->getPasswordResetService()
-            ->sendPasswordResetMail($email);
+            ->sendPasswordResetMail($email, $url);
 
         return [
             'success' => true,

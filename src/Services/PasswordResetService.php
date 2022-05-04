@@ -35,7 +35,7 @@ class PasswordResetService
         return $this->getAuthUserService()->getByEmail($email);
     }
 
-    public function sendPasswordResetMail($email)
+    public function sendPasswordResetMail($email, $url = null)
     {
         $user = $this->getUserByEmail($email);
 
@@ -60,7 +60,7 @@ class PasswordResetService
 
         $passwordReset->save();
 
-        $message = new PasswordResetMessage($user, $this->getAppUrl(), $token, $this->getLocale());
+        $message = new PasswordResetMessage($user, $url ? $url : $this->getAppUrl(), $token, $this->getLocale());
 
         try {
             $message->onQueue('emails');
