@@ -109,7 +109,7 @@ class PasswordResetMessage extends Mailable
     protected function getUrl()
     {
         return sprintf(
-            '%s/reset-password/%s',
+            '%s/%s',
             $this->getAppUrl(),
             $this->getToken()
         );
