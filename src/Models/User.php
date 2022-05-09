@@ -3,6 +3,7 @@
 namespace Dzangolab\Auth\Models;
 
 use Carbon\Carbon;
+use Dzangolab\Auth\Exceptions\Http\InvalidCredentialsException;
 use Dzangolab\Auth\Exceptions\UserDisabledException;
 use Dzangolab\Auth\Exceptions\UserNotFoundException;
 use Exception;
@@ -114,6 +115,46 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             ->orWhere('username', $username)
             ->orWhere('email', $email)
             ->first();
+    }
+
+    public function findForAuth($username, $withRoles): User
+    {
+        if ($withRoles && count($withRoles)) {
+            $roleIds = Role::query()
+                ->whereIn('name', $withRoles)
+                ->pluck('id');
+
+            $user = $this->query()
+                ->where('username', $username)
+                ->orWhere('email', $username)
+                ->first();
+
+            if (!$user) {
+                throw new InvalidCredentialsException('Invalid credentials');
+            }
+
+            $user = $this->query()
+                ->where(function ($query) use ($username) {
+                    $query->where('username', $username)
+                        ->orWhere('email', $username);
+                })
+                ->leftJoin('user_roles', 'users.id', 'user_roles.user_id')
+                ->whereIn('user_roles.role_id', $roleIds)
+                ->first();
+
+            if (!$user) {
+                throw new Exception('Invalid role');
+            }
+
+            if ($user->isDisabled()) {
+                throw new UserDisabledException($user);
+            }
+
+            return User::query()
+                ->find($user->user_id);
+        }
+
+        return $this->findForPassport($username);
     }
 
     public function findForPassport($username): User
