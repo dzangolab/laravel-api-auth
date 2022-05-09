@@ -1,8 +1,7 @@
 <?php
 
-namespace Api\Users\Models;
+namespace Dzangolab\Auth\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
