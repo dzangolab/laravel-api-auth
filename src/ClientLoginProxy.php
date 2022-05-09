@@ -56,10 +56,10 @@ class ClientLoginProxy
      *
      * @return array
      */
-    public function attemptLogin($username, $password)
+    public function attemptLogin($username, $password, $withRoles = null)
     {
         try {
-            $user = (new User())->findForPassport($username);
+            $user = (new User())->findForAuth($username, $withRoles);
 
             if ($user) {
                 return [
