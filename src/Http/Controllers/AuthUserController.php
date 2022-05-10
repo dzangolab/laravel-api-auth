@@ -10,6 +10,7 @@ use Dzangolab\Auth\Exceptions\UserAlreadyExistsException;
 use Dzangolab\Auth\Exceptions\UserDisabledException;
 use Dzangolab\Auth\Http\Requests\CreateUserRequest;
 use Dzangolab\Auth\Http\Requests\UpdatePasswordRequest;
+use Dzangolab\Auth\Http\Requests\UpdateProfileRequest;
 use Dzangolab\Auth\Http\Requests\UpdateUserRequest;
 use Dzangolab\Auth\Services\AuthUserService;
 use Exception;
@@ -119,11 +120,13 @@ class AuthUserController extends Controller
         ];
     }
 
-    public function updateProfile()
+    public function updateProfile(UpdateProfileRequest $request)
     {
         $user = Auth::user();
 
-        return $this->getAuthUserService()->updateProfile($user);
+        $data = $request->get('profile', []);
+
+        return $this->getAuthUserService()->updateProfile($user, $data);
     }
 
     protected function getAuthUserService(): AuthUserService

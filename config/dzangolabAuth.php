@@ -59,11 +59,20 @@ return [
                 'password' => 'required|string|min:6',
             ],
         ],
+        'update_profile' => [
+            'rules' => [
+                'gender' => [
+                    'in:1,2',
+                ],
+                'given_name' => 'string|min:2|max:255',
+                'surname' => 'string|min:2|max:255',
+            ],
+        ],
         'update_user' => [
             'rules' => [
                 'profile' => 'array',
                 'profile.gender' => [
-                    Illuminate\Validation\Rule::in([1, 2]),
+                    'in:1,2',
                 ],
                 'profile.given_name' => 'string|min:2|max:255',
                 'profile.surname' => 'string|min:2|max:255',

@@ -116,9 +116,9 @@ class AuthUserService
 
     public function getById($userId)
     {
-        if (!$this->checksCurrentUser($userId)) {
-            return;
-        }
+        // if (!$this->checksCurrentUser($userId)) {
+        //     return;
+        // }
 
         return $this->getUserRepository()->getById($userId);
     }
@@ -203,9 +203,9 @@ class AuthUserService
             ->updatePassword($user, $data);
     }
 
-    public function updateProfile($userId, array $data)
+    public function updateProfile(User $user, array $data)
     {
-        $user = $this->checksCurrentUser($userId);
+        // $user = $this->checksCurrentUser($userId);
 
         $profile = $this->getUserRepository()->updateProfile($user, $data);
 
